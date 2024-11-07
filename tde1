@@ -1,0 +1,223 @@
+/*#include <stdio.h>
+
+#define MAX_PRODUTOS 100
+
+struct Produto {
+    int id;
+    char nome[50];
+    float valor;
+};
+
+void contarProdutosAbaixoValor(struct Produto produtos[], int quantidade, float valorLimite) {
+    int contador = 0;
+    for (int i = 0; i < quantidade; i++) {
+        if (produtos[i].valor < valorLimite) {
+            contador++;
+        }
+    }
+    printf("Número de produtos abaixo de %.2f: %d\n", valorLimite, contador);
+}
+
+void buscarProdutoPorID(struct Produto produtos[], int quantidade, int idBuscado) {
+    for (int i = 0; i < quantidade; i++) {
+        if (produtos[i].id == idBuscado) {
+            printf("Produto encontrado:\n");
+            printf("ID: %d\nNome: %s\nValor: %.2f\n", produtos[i].id, produtos[i].nome, produtos[i].valor);
+            return;
+        }
+    }
+    printf("Produto com ID %d não encontrado.\n", idBuscado);
+}
+
+void atualizarValorProduto(struct Produto produtos[], int quantidade, int idBuscado) {
+    for (int i = 0; i < quantidade; i++) {
+        if (produtos[i].id == idBuscado) {
+            printf("Produto encontrado:\n");
+            printf("ID: %d\nNome: %s\nValor atual: %.2f\n", produtos[i].id, produtos[i].nome, produtos[i].valor);
+            printf("Digite o novo valor: ");
+            scanf("%f", &produtos[i].valor);
+            printf("Valor atualizado com sucesso!\n");
+            return;
+        }
+    }
+    printf("Produto com ID %d não encontrado.\n", idBuscado);
+}
+
+float calcularMedia(struct Produto produtos[], int quantidade) {
+    float soma = 0.0;
+    for (int i = 0; i < quantidade; i++) {
+        soma += produtos[i].valor;
+    }
+    return soma / quantidade;
+}
+
+void exibirProdutosAcimaDaMedia(struct Produto produtos[], int quantidade, float media) {
+    printf("Produtos acima da média (%.2f):\n", media);
+    for (int i = 0; i < quantidade; i++) {
+        if (produtos[i].valor > media) {
+            printf("ID: %d, Nome: %s, Valor: %.2f\n", produtos[i].id, produtos[i].nome, produtos[i].valor);
+        }
+    }
+}
+
+int main() {
+    struct Produto produtos[MAX_PRODUTOS];
+    int quantidade;
+
+    printf("Digite a quantidade de produtos: ");
+    scanf("%d", &quantidade);
+
+    for (int i = 0; i < quantidade; i++) {
+        printf("Produto %d:\n", i + 1);
+        printf("ID: ");
+        scanf("%d", &produtos[i].id);
+        printf("Nome: ");
+        scanf("%s", produtos[i].nome);
+        printf("Valor: ");
+        scanf("%f", &produtos[i].valor);
+    }
+
+    float valorLimite;
+    printf("Digite um valor limite: ");
+    scanf("%f", &valorLimite);
+    contarProdutosAbaixoValor(produtos, quantidade, valorLimite);
+
+    int idBuscado;
+    printf("Digite o ID do produto que deseja buscar: ");
+    scanf("%d", &idBuscado);
+    buscarProdutoPorID(produtos, quantidade, idBuscado);
+
+    printf("Digite o ID do produto que deseja atualizar: ");
+    scanf("%d", &idBuscado);
+    atualizarValorProduto(produtos, quantidade, idBuscado);
+
+    float media = calcularMedia(produtos, quantidade);
+    printf("A média dos preços dos produtos é: %.2f\n", media);
+    exibirProdutosAcimaDaMedia(produtos, quantidade, media);
+
+    return 0;
+}
+
+#include <stdio.h>
+
+#define MAX_CLUBES 10
+
+struct Clube {
+    int id;
+    char nome[50];
+    int vitorias;
+    int empates;
+    int derrotas;
+    int golsPro;
+    int golsContra;
+    int pontuacao;
+};
+
+void calcularPontuacao(struct Clube* clube) {
+    clube->pontuacao = (clube->vitorias * 3) + (clube->empates);
+}
+
+void cadastrarClubes(struct Clube clubes[], int quantidade) {
+    for (int i = 0; i < quantidade; i++) {
+        printf("\nClube %d:\n", i + 1);
+        printf("ID: ");
+        scanf("%d", &clubes[i].id);
+        printf("Nome: ");
+        scanf("%s", clubes[i].nome);
+        printf("Vitórias: ");
+        scanf("%d", &clubes[i].vitorias);
+        printf("Empates: ");
+        scanf("%d", &clubes[i].empates);
+        printf("Derrotas: ");
+        scanf("%d", &clubes[i].derrotas);
+        printf("Gols pró: ");
+        scanf("%d", &clubes[i].golsPro);
+        printf("Gols contra: ");
+        scanf("%d", &clubes[i].golsContra);
+        calcularPontuacao(&clubes[i]);
+    }
+}
+
+void exibirClubes(struct Clube clubes[], int quantidade) {
+    printf("\nPontuação dos clubes:\n");
+    for (int i = 0; i < quantidade; i++) {
+        printf("Clube: %s (ID: %d) - Pontuação: %d\n", clubes[i].nome, clubes[i].id, clubes[i].pontuacao);
+    }
+}
+
+void buscarClube(struct Clube clubes[], int quantidade) {
+    int idBuscado;
+    printf("\nDigite o ID do clube que deseja buscar: ");
+    scanf("%d", &idBuscado);
+
+    for (int i = 0; i < quantidade; i++) {
+        if (clubes[i].id == idBuscado) {
+            printf("Clube encontrado:\n");
+            printf("ID: %d, Nome: %s, Vitórias: %d, Empates: %d, Derrotas: %d, Gols pró: %d, Gols contra: %d, Pontuação: %d\n",
+                   clubes[i].id, clubes[i].nome, clubes[i].vitorias, clubes[i].empates, clubes[i].derrotas, 
+                   clubes[i].golsPro, clubes[i].golsContra, clubes[i].pontuacao);
+            return;
+        }
+    }
+    printf("Clube com ID %d não encontrado.\n", idBuscado);
+}
+
+void exibirClubesAcimaMedia(struct Clube clubes[], int quantidade) {
+    float somaGolsPro = 0;
+    for (int i = 0; i < quantidade; i++) {
+        somaGolsPro += clubes[i].golsPro;
+    }
+    float mediaGolsPro = somaGolsPro / quantidade;
+
+    printf("\nClubes com Gols Pró acima da média (%.2f):\n", mediaGolsPro);
+    for (int i = 0; i < quantidade; i++) {
+        if (clubes[i].golsPro > mediaGolsPro) {
+            printf("ID: %d, Nome: %s, Gols Pró: %d\n", clubes[i].id, clubes[i].nome, clubes[i].golsPro);
+        }
+    }
+}
+
+void exibirSaldoGols(struct Clube clubes[], int quantidade) {
+    printf("\nSaldo de Gols dos Clubes:\n");
+    for (int i = 0; i < quantidade; i++) {
+        int saldoGols = clubes[i].golsPro - clubes[i].golsContra;
+        printf("Clube: %s - Saldo de Gols: %d\n", clubes[i].nome, saldoGols);
+    }
+}
+
+void exibirMelhorEPiorClube(struct Clube clubes[], int quantidade) {
+    struct Clube* melhorClube = &clubes[0];
+    struct Clube* piorClube = &clubes[0];
+
+    for (int i = 1; i < quantidade; i++) {
+        if (clubes[i].pontuacao > melhorClube->pontuacao) {
+            melhorClube = &clubes[i];
+        }
+        if (clubes[i].pontuacao < piorClube->pontuacao) {
+            piorClube = &clubes[i];
+        }
+    }
+
+    printf("\nClube Campeão:\n");
+    printf("ID: %d, Nome: %s, Pontuação: %d\n", melhorClube->id, melhorClube->nome, melhorClube->pontuacao);
+
+    printf("Último Colocado:\n");
+    printf("ID: %d, Nome: %s, Pontuação: %d\n", piorClube->id, piorClube->nome, piorClube->pontuacao);
+}
+
+int main() {
+    struct Clube clubes[MAX_CLUBES];
+    int quantidade;
+
+    printf("Digite a quantidade de clubes (maximo %d): ", MAX_CLUBES);
+    scanf("%d", &quantidade);
+
+    cadastrarClubes(clubes, quantidade);
+    exibirClubes(clubes, quantidade);
+    buscarClube(clubes, quantidade);
+    exibirClubesAcimaMedia(clubes, quantidade);
+    exibirSaldoGols(clubes, quantidade);
+    exibirMelhorEPiorClube(clubes, quantidade);
+
+    return 0;
+}*/
