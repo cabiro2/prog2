@@ -1,0 +1,157 @@
+Registro de Veículos
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct {
+    int id;
+    char modelo[50];
+    char placa[10];
+    int ano;
+} Veiculo;
+
+void limparBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) {}
+}
+
+void adicionarVeiculo() {
+    FILE *arquivo = fopen("veiculos.txt", "a");
+    Veiculo veiculo;
+
+    printf("ID: "); scanf("%d", &veiculo.id); limparBuffer();
+    printf("Modelo: "); fgets(veiculo.modelo, 50, stdin); veiculo.modelo[strcspn(veiculo.modelo, "\n")] = 0;
+    printf("Placa: "); fgets(veiculo.placa, 10, stdin); veiculo.placa[strcspn(veiculo.placa, "\n")] = 0;
+    printf("Ano de fabricação: "); scanf("%d", &veiculo.ano); limparBuffer();
+
+    fprintf(arquivo, "%d,%s,%s,%d\n", veiculo.id, veiculo.modelo, veiculo.placa, veiculo.ano);
+    fclose(arquivo);
+}
+
+void alterarVeiculo() {
+    FILE *arquivo = fopen("veiculos.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+    int id, opcao, encontrado = 0;
+    Veiculo veiculo;
+    char linha[100];
+
+    printf("ID do veículo a alterar: "); scanf("%d", &id); limparBuffer();
+
+    while (fgets(linha, 100, arquivo)) {
+        sscanf(linha, "%d,%49[^,],%9[^,],%d", &veiculo.id, veiculo.modelo, veiculo.placa, &veiculo.ano);
+
+        if (veiculo.id == id) {
+            encontrado = 1;
+            printf("1. Modelo\n2. Placa\n3. Ano de fabricação\nEscolha uma opção: "); scanf("%d", &opcao); limparBuffer();
+            if (opcao == 1) {
+                printf("Novo modelo: "); fgets(veiculo.modelo, 50, stdin); veiculo.modelo[strcspn(veiculo.modelo, "\n")] = 0;
+            } else if (opcao == 2) {
+                printf("Nova placa: "); fgets(veiculo.placa, 10, stdin); veiculo.placa[strcspn(veiculo.placa, "\n")] = 0;
+            } else if (opcao == 3) {
+                printf("Novo ano de fabricação: "); scanf("%d", &veiculo.ano); limparBuffer();
+            }
+        }
+        fprintf(temp, "%d,%s,%s,%d\n", veiculo.id, veiculo.modelo, veiculo.placa, veiculo.ano);
+    }
+    fclose(arquivo); fclose(temp);
+
+    if (encontrado) {
+        remove("veiculos.txt");
+        rename("temp.txt", "veiculos.txt");
+        printf("Dados alterados!\n");
+    } else {
+        remove("temp.txt");
+        printf("Veículo não encontrado!\n");
+    }
+}
+
+void excluirVeiculo() {
+    FILE *arquivo = fopen("veiculos.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+    int id, encontrado = 0;
+    Veiculo veiculo;
+    char linha[100];
+
+    printf("ID do veículo a excluir: "); scanf("%d", &id); limparBuffer();
+
+    while (fgets(linha, 100, arquivo)) {
+        sscanf(linha, "%d,%49[^,],%9[^,],%d", &veiculo.id, veiculo.modelo, veiculo.placa, &veiculo.ano);
+
+        if (veiculo.id != id) {
+            fprintf(temp, "%d,%s,%s,%d\n", veiculo.id, veiculo.modelo, veiculo.placa, veiculo.ano);
+        } else {
+            encontrado = 1;
+        }
+    }
+    fclose(arquivo); fclose(temp);
+
+    if (encontrado) {
+        remove("veiculos.txt");
+        rename("temp.txt", "veiculos.txt");
+        printf("Veículo excluído!\n");
+    } else {
+        remove("temp.txt");
+        printf("Veículo não encontrado!\n");
+    }
+}
+
+void consultarVeiculo() {
+    FILE *arquivo = fopen("veiculos.txt", "r");
+    char placa[10];
+    int encontrado = 0;
+    Veiculo veiculo;
+    char linha[100];
+
+    printf("Placa do veículo: "); fgets(placa, 10, stdin); placa[strcspn(placa, "\n")] = 0;
+
+    while (fgets(linha, 100, arquivo)) {
+        sscanf(linha, "%d,%49[^,],%9[^,],%d", &veiculo.id, veiculo.modelo, veiculo.placa, &veiculo.ano);
+
+        if (strcmp(veiculo.placa, placa) == 0) {
+            printf("ID: %d\nModelo: %s\nPlaca: %s\nAno de fabricação: %d\n", veiculo.id, veiculo.modelo, veiculo.placa, veiculo.ano);
+            encontrado = 1;
+            break;
+        }
+    }
+    fclose(arquivo);
+
+    if (!encontrado) {
+        printf("Veículo não encontrado!\n");
+    }
+}
+
+void listarVeiculos() {
+    FILE *arquivo = fopen("veiculos.txt", "r");
+    Veiculo veiculo;
+    char linha[100];
+
+    printf("\nLista de Veículos:\n");
+    while (fgets(linha, 100, arquivo)) {
+        sscanf(linha, "%d,%49[^,],%9[^,],%d", &veiculo.id, veiculo.modelo, veiculo.placa, &veiculo.ano);
+        printf("ID: %d | Modelo: %s | Placa: %s | Ano: %d\n", veiculo.id, veiculo.modelo, veiculo.placa, veiculo.ano);
+    }
+    fclose(arquivo);
+}
+
+int main() {
+    int opcao;
+
+    do {
+        printf("\n=== Gestão de Veículos ===\n");
+        printf("1. Adicionar veículo\n2. Alterar veículo\n3. Excluir veículo\n4. Consultar veículo\n5. Listar veículos\n0. Sair\nEscolha uma opção: ");
+        scanf("%d", &opcao); limparBuffer();
+
+        switch (opcao) {
+            case 1: adicionarVeiculo(); break;
+            case 2: alterarVeiculo(); break;
+            case 3: excluirVeiculo(); break;
+            case 4: consultarVeiculo(); break;
+            case 5: listarVeiculos(); break;
+            case 0: printf("Encerrando...\n"); break;
+            default: printf("Opção inválida!\n");
+        }
+    } while (opcao != 0);
+
+    return 0;
+}
