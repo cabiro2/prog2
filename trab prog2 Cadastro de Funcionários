@@ -1,0 +1,154 @@
+Cadastro de Funcionários
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct {
+    int id;
+    char nome[50];
+    char cargo[30];
+    int salario;
+} Funcionario;
+
+void limparBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) {}
+}
+
+void cadastrarFuncionario() {
+    FILE *arquivo = fopen("funcionarios.txt", "a");
+    Funcionario f;
+
+    printf("ID: "); scanf("%d", &f.id); limparBuffer();
+    printf("Nome: "); fgets(f.nome, 50, stdin); f.nome[strcspn(f.nome, "\n")] = 0;
+    printf("Cargo: "); fgets(f.cargo, 30, stdin); f.cargo[strcspn(f.cargo, "\n")] = 0;
+    printf("Salário: "); scanf("%d", &f.salario); limparBuffer();
+
+    fprintf(arquivo, "%d,%s,%s,%d\n", f.id, f.nome, f.cargo, f.salario);
+    fclose(arquivo);
+}
+
+void alterarFuncionario() {
+    FILE *arquivo = fopen("funcionarios.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+    int id, opcao, encontrado = 0;
+    Funcionario f;
+    char linha[100];
+
+    printf("ID do funcionário a alterar: "); scanf("%d", &id); limparBuffer();
+
+    while (fgets(linha, 100, arquivo)) {
+        sscanf(linha, "%d,%49[^,],%29[^,],%d", &f.id, f.nome, f.cargo, &f.salario);
+
+        if (f.id == id) {
+            encontrado = 1;
+            printf("1. Cargo\n2. Salário\nEscolha uma opção: "); scanf("%d", &opcao); limparBuffer();
+            if (opcao == 1) {
+                printf("Novo cargo: "); fgets(f.cargo, 30, stdin); f.cargo[strcspn(f.cargo, "\n")] = 0;
+            } else if (opcao == 2) {
+                printf("Novo salário: "); scanf("%d", &f.salario); limparBuffer();
+            }
+        }
+        fprintf(temp, "%d,%s,%s,%d\n", f.id, f.nome, f.cargo, f.salario);
+    }
+    fclose(arquivo); fclose(temp);
+
+    if (encontrado) {
+        remove("funcionarios.txt");
+        rename("temp.txt", "funcionarios.txt");
+        printf("Dados alterados!\n");
+    } else {
+        remove("temp.txt");
+        printf("Funcionário não encontrado!\n");
+    }
+}
+
+void excluirFuncionario() {
+    FILE *arquivo = fopen("funcionarios.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+    int id, encontrado = 0;
+    Funcionario f;
+    char linha[100];
+
+    printf("ID do funcionário a excluir: "); scanf("%d", &id); limparBuffer();
+
+    while (fgets(linha, 100, arquivo)) {
+        sscanf(linha, "%d,%49[^,],%29[^,],%d", &f.id, f.nome, f.cargo, &f.salario);
+
+        if (f.id != id) {
+            fprintf(temp, "%d,%s,%s,%d\n", f.id, f.nome, f.cargo, f.salario);
+        } else {
+            encontrado = 1;
+        }
+    }
+    fclose(arquivo); fclose(temp);
+
+    if (encontrado) {
+        remove("funcionarios.txt");
+        rename("temp.txt", "funcionarios.txt");
+        printf("Funcionário excluído!\n");
+    } else {
+        remove("temp.txt");
+        printf("Funcionário não encontrado!\n");
+    }
+}
+
+void consultarFuncionario() {
+    FILE *arquivo = fopen("funcionarios.txt", "r");
+    int id, encontrado = 0;
+    Funcionario f;
+    char linha[100];
+
+    printf("ID do funcionário: "); scanf("%d", &id); limparBuffer();
+
+    while (fgets(linha, 100, arquivo)) {
+        sscanf(linha, "%d,%49[^,],%29[^,],%d", &f.id, f.nome, f.cargo, &f.salario);
+
+        if (f.id == id) {
+            printf("ID: %d\nNome: %s\nCargo: %s\nSalário: %d\n", f.id, f.nome, f.cargo, f.salario);
+            encontrado = 1;
+            break;
+        }
+    }
+    fclose(arquivo);
+
+    if (!encontrado) {
+        printf("Funcionário não encontrado!\n");
+    }
+}
+
+void listarFuncionarios() {
+    FILE *arquivo = fopen("funcionarios.txt", "r");
+    Funcionario f;
+    char linha[100];
+
+    printf("\nLista de Funcionários:\n");
+    while (fgets(linha, 100, arquivo)) {
+        sscanf(linha, "%d,%49[^,],%29[^,],%d", &f.id, f.nome, f.cargo, &f.salario);
+        printf("ID: %d | Nome: %s | Cargo: %s | Salário: %d\n", f.id, f.nome, f.cargo, f.salario);
+    }
+    fclose(arquivo);
+}
+
+int main() {
+    int opcao;
+
+    do {
+        printf("\n=== Sistema de Gerenciamento de Funcionários ===\n");
+        printf("1. Cadastrar funcionário\n2. Alterar dados do funcionário\n3. Excluir funcionário\n4. Consultar funcionário\n5. Listar funcionários\n0. Sair\nEscolha uma opção: ");
+        scanf("%d", &opcao); limparBuffer();
+
+        switch (opcao) {
+            case 1: cadastrarFuncionario(); break;
+            case 2: alterarFuncionario(); break;
+            case 3: excluirFuncionario(); break;
+            case 4: consultarFuncionario(); break;
+            case 5: listarFuncionarios(); break;
+            case 0: printf("Encerrando...\n"); break;
+            default: printf("Opção inválida!\n");
+        }
+    } while (opcao != 0);
+
+    return 0;
+}
