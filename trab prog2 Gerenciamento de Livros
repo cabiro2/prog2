@@ -1,0 +1,156 @@
+Gerenciamento de Livros .
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct {
+    int codigo;
+    char titulo[50];
+    char autor[50];
+    int ano;
+} Livro;
+
+void limparBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) {}
+}
+
+void adicionarLivro() {
+    FILE *arquivo = fopen("catalogo.txt", "a");
+    Livro livro;
+
+    printf("Código: "); scanf("%d", &livro.codigo); limparBuffer();
+    printf("Título: "); fgets(livro.titulo, 50, stdin); livro.titulo[strcspn(livro.titulo, "\n")] = 0;
+    printf("Autor: "); fgets(livro.autor, 50, stdin); livro.autor[strcspn(livro.autor, "\n")] = 0;
+    printf("Ano de publicação: "); scanf("%d", &livro.ano); limparBuffer();
+
+    fprintf(arquivo, "%d,%s,%s,%d\n", livro.codigo, livro.titulo, livro.autor, livro.ano);
+    fclose(arquivo);
+}
+
+void alterarLivro() {
+    FILE *arquivo = fopen("catalogo.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+    int codigo, opcao, encontrado = 0;
+    Livro livro;
+    char linha[150];
+
+    printf("Código do livro a alterar: "); scanf("%d", &codigo); limparBuffer();
+
+    while (fgets(linha, 150, arquivo)) {
+        sscanf(linha, "%d,%49[^,],%49[^,],%d", &livro.codigo, livro.titulo, livro.autor, &livro.ano);
+
+        if (livro.codigo == codigo) {
+            encontrado = 1;
+            printf("1. Título\n2. Autor\n3. Ano de publicação\nEscolha uma opção: "); scanf("%d", &opcao); limparBuffer();
+            if (opcao == 1) {
+                printf("Novo título: "); fgets(livro.titulo, 50, stdin); livro.titulo[strcspn(livro.titulo, "\n")] = 0;
+            } else if (opcao == 2) {
+                printf("Novo autor: "); fgets(livro.autor, 50, stdin); livro.autor[strcspn(livro.autor, "\n")] = 0;
+            } else if (opcao == 3) {
+                printf("Novo ano de publicação: "); scanf("%d", &livro.ano); limparBuffer();
+            }
+        }
+        fprintf(temp, "%d,%s,%s,%d\n", livro.codigo, livro.titulo, livro.autor, livro.ano);
+    }
+    fclose(arquivo); fclose(temp);
+
+    if (encontrado) {
+        remove("catalogo.txt");
+        rename("temp.txt", "catalogo.txt");
+        printf("Dados alterados!\n");
+    } else {
+        remove("temp.txt");
+        printf("Livro não encontrado!\n");
+    }
+}
+
+void excluirLivro() {
+    FILE *arquivo = fopen("catalogo.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+    int codigo, encontrado = 0;
+    Livro livro;
+    char linha[150];
+
+    printf("Código do livro a excluir: "); scanf("%d", &codigo); limparBuffer();
+
+    while (fgets(linha, 150, arquivo)) {
+        sscanf(linha, "%d,%49[^,],%49[^,],%d", &livro.codigo, livro.titulo, livro.autor, &livro.ano);
+
+        if (livro.codigo != codigo) {
+            fprintf(temp, "%d,%s,%s,%d\n", livro.codigo, livro.titulo, livro.autor, livro.ano);
+        } else {
+            encontrado = 1;
+        }
+    }
+    fclose(arquivo); fclose(temp);
+
+    if (encontrado) {
+        remove("catalogo.txt");
+        rename("temp.txt", "catalogo.txt");
+        printf("Livro excluído!\n");
+    } else {
+        remove("temp.txt");
+        printf("Livro não encontrado!\n");
+    }
+}
+
+void consultarLivro() {
+    FILE *arquivo = fopen("catalogo.txt", "r");
+    int codigo, encontrado = 0;
+    Livro livro;
+    char linha[150];
+
+    printf("Código do livro: "); scanf("%d", &codigo); limparBuffer();
+
+    while (fgets(linha, 150, arquivo)) {
+        sscanf(linha, "%d,%49[^,],%49[^,],%d", &livro.codigo, livro.titulo, livro.autor, &livro.ano);
+
+        if (livro.codigo == codigo) {
+            printf("Código: %d\nTítulo: %s\nAutor: %s\nAno de publicação: %d\n", livro.codigo, livro.titulo, livro.autor, livro.ano);
+            encontrado = 1;
+            break;
+        }
+    }
+    fclose(arquivo);
+
+    if (!encontrado) {
+        printf("Livro não encontrado!\n");
+    }
+}
+
+void listarLivros() {
+    FILE *arquivo = fopen("catalogo.txt", "r");
+    Livro livro;
+    char linha[150];
+
+    printf("\nLista de Livros:\n");
+    while (fgets(linha, 150, arquivo)) {
+        sscanf(linha, "%d,%49[^,],%49[^,],%d", &livro.codigo, livro.titulo, livro.autor, &livro.ano);
+        printf("Código: %d | Título: %s | Autor: %s | Ano: %d\n", livro.codigo, livro.titulo, livro.autor, livro.ano);
+    }
+    fclose(arquivo);
+}
+
+int main() {
+    int opcao;
+
+    do {
+        printf("\n=== Catálogo de Livros ===\n");
+        printf("1. Adicionar livro\n2. Alterar livro\n3. Excluir livro\n4. Consultar livro\n5. Listar livros\n0. Sair\nEscolha uma opção: ");
+        scanf("%d", &opcao); limparBuffer();
+
+        switch (opcao) {
+            case 1: adicionarLivro(); break;
+            case 2: alterarLivro(); break;
+            case 3: excluirLivro(); break;
+            case 4: consultarLivro(); break;
+            case 5: listarLivros(); break;
+            case 0: printf("Encerrando...\n"); break;
+            default: printf("Opção inválida!\n");
+        }
+    } while (opcao != 0);
+
+    return 0;
+}
