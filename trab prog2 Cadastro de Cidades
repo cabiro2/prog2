@@ -1,0 +1,158 @@
+Cadastro de Cidades
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct {
+    int codigo;
+    char nome[50];
+    char estado[30];
+    int populacao;
+} Cidade;
+
+void limparBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) {}
+}
+
+void incluirCidade() {
+    FILE *arquivo = fopen("cidades.txt", "a");
+    Cidade cidade;
+
+    printf("Código: "); scanf("%d", &cidade.codigo); limparBuffer();
+    printf("Nome: "); fgets(cidade.nome, 50, stdin); cidade.nome[strcspn(cidade.nome, "\n")] = 0;
+    printf("Estado: "); fgets(cidade.estado, 30, stdin); cidade.estado[strcspn(cidade.estado, "\n")] = 0;
+    printf("População: "); scanf("%d", &cidade.populacao); limparBuffer();
+
+    fprintf(arquivo, "%d,%s,%s,%d\n", cidade.codigo, cidade.nome, cidade.estado, cidade.populacao);
+    fclose(arquivo);
+    printf("Cidade incluída com sucesso!\n");
+}
+
+void alterarDados() {
+    FILE *arquivo = fopen("cidades.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+    int codigo, opcao, encontrado = 0;
+    Cidade cidade;
+    char linha[150];
+
+    printf("Código da cidade a alterar: "); scanf("%d", &codigo); limparBuffer();
+
+    while (fgets(linha, 150, arquivo)) {
+        sscanf(linha, "%d,%49[^,],%29[^,],%d", &cidade.codigo, cidade.nome, cidade.estado, &cidade.populacao);
+
+        if (cidade.codigo == codigo) {
+            encontrado = 1;
+            printf("1. Nome\n2. Estado\n3. População\nEscolha uma opção: "); scanf("%d", &opcao); limparBuffer();
+            if (opcao == 1) {
+                printf("Novo nome: "); fgets(cidade.nome, 50, stdin); cidade.nome[strcspn(cidade.nome, "\n")] = 0;
+            } else if (opcao == 2) {
+                printf("Novo estado: "); fgets(cidade.estado, 30, stdin); cidade.estado[strcspn(cidade.estado, "\n")] = 0;
+            } else if (opcao == 3) {
+                printf("Nova população: "); scanf("%d", &cidade.populacao); limparBuffer();
+            }
+        }
+        fprintf(temp, "%d,%s,%s,%d\n", cidade.codigo, cidade.nome, cidade.estado, cidade.populacao);
+    }
+    fclose(arquivo); fclose(temp);
+
+    if (encontrado) {
+        remove("cidades.txt");
+        rename("temp.txt", "cidades.txt");
+        printf("Dados alterados com sucesso!\n");
+    } else {
+        remove("temp.txt");
+        printf("Cidade não encontrada!\n");
+    }
+}
+
+void excluirCidade() {
+    FILE *arquivo = fopen("cidades.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+    int codigo, encontrado = 0;
+    Cidade cidade;
+    char linha[150];
+
+    printf("Código da cidade a excluir: "); scanf("%d", &codigo); limparBuffer();
+
+    while (fgets(linha, 150, arquivo)) {
+        sscanf(linha, "%d,%49[^,],%29[^,],%d", &cidade.codigo, cidade.nome, cidade.estado, &cidade.populacao);
+
+        if (cidade.codigo != codigo) {
+            fprintf(temp, "%d,%s,%s,%d\n", cidade.codigo, cidade.nome, cidade.estado, cidade.populacao);
+        } else {
+            encontrado = 1;
+        }
+    }
+    fclose(arquivo); fclose(temp);
+
+    if (encontrado) {
+        remove("cidades.txt");
+        rename("temp.txt", "cidades.txt");
+        printf("Cidade excluída com sucesso!\n");
+    } else {
+        remove("temp.txt");
+        printf("Cidade não encontrada!\n");
+    }
+}
+
+void consultarCidade() {
+    FILE *arquivo = fopen("cidades.txt", "r");
+    int codigo, encontrado = 0;
+    Cidade cidade;
+    char linha[150];
+
+    printf("Código da cidade: "); scanf("%d", &codigo); limparBuffer();
+
+    while (fgets(linha, 150, arquivo)) {
+        sscanf(linha, "%d,%49[^,],%29[^,],%d", &cidade.codigo, cidade.nome, cidade.estado, &cidade.populacao);
+
+        if (cidade.codigo == codigo) {
+            printf("\nCódigo: %d\nNome: %s\nEstado: %s\nPopulação: %d\n", cidade.codigo, cidade.nome, cidade.estado, cidade.populacao);
+            encontrado = 1;
+            break;
+        }
+    }
+    fclose(arquivo);
+
+    if (!encontrado) {
+        printf("Cidade não encontrada!\n");
+    }
+}
+
+void listarCidades() {
+    FILE *arquivo = fopen("cidades.txt", "r");
+    Cidade cidade;
+    char linha[150];
+
+    printf("\nLista de Cidades:\n");
+    while (fgets(linha, 150, arquivo)) {
+        sscanf(linha, "%d,%49[^,],%29[^,],%d", &cidade.codigo, cidade.nome, cidade.estado, &cidade.populacao);
+        printf("Código: %d | Nome: %s | Estado: %s | População: %d\n", cidade.codigo, cidade.nome, cidade.estado, cidade.populacao);
+    }
+    fclose(arquivo);
+}
+
+int main() {
+    int opcao;
+
+    do {
+        printf("\n=== Cadastro de Cidades ===\n");
+        printf("1. Incluir cidade\n2. Alterar dados\n3. Excluir cidade\n4. Consultar cidade\n5. Listar cidades\n0. Sair\nEscolha uma opção: ");
+        scanf("%d", &opcao); limparBuffer();
+
+        switch (opcao) {
+            case 1: incluirCidade(); break;
+            case 2: alterarDados(); break;
+            case 3: excluirCidade(); break;
+            case 4: consultarCidade(); break;
+            case 5: listarCidades(); break;
+            case 0: printf("Encerrando...\n"); break;
+            default: printf("Opção inválida!\n");
+        }
+    } while (opcao != 0);
+
+    return 0;
+}
