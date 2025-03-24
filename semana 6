@@ -1,0 +1,64 @@
+import java.util.Scanner;
+
+public class ExerciciosRepeticao {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        // Exercício 1: Soma dos N primeiros números naturais
+        System.out.print("Digite um número N: ");
+        int n = scanner.nextInt();
+        int soma = 0;
+        for (int i = 1; i <= n; i++) {
+            soma += i;
+        }
+        System.out.println("A soma dos " + n + " primeiros números naturais é: " + soma);
+        
+        // Exercício 2: Tabuada de um número
+        System.out.print("Digite um número para ver a tabuada: ");
+        int num = scanner.nextInt();
+        int contador = 1;
+        while (contador <= 10) {
+            System.out.println(num + " x " + contador + " = " + (num * contador));
+            contador++;
+        }
+        
+        // Exercício 3: Contagem regressiva usando do-while
+        System.out.print("Digite um número para a contagem regressiva: ");
+        int numRegressivo = scanner.nextInt();
+        do {
+            System.out.println(numRegressivo);
+            numRegressivo--;
+        } while (numRegressivo >= 0);
+        
+        // Exercício 4: Média de notas de uma turma
+        System.out.print("Digite o número de alunos na turma: ");
+        int numAlunos = scanner.nextInt();
+        double somaNotas = 0;
+        for (int i = 1; i <= numAlunos; i++) {
+            System.out.print("Digite a nota do aluno " + i + ": ");
+            somaNotas += scanner.nextDouble();
+        }
+        System.out.println("A média da turma é: " + (somaNotas / numAlunos));
+        
+        // Exercício 5: Números primos em um intervalo
+        System.out.print("Digite o início do intervalo: ");
+        int inicio = scanner.nextInt();
+        System.out.print("Digite o fim do intervalo: ");
+        int fim = scanner.nextInt();
+        System.out.println("Números primos no intervalo: ");
+        for (int i = inicio; i <= fim; i++) {
+            if (ehPrimo(i)) {
+                System.out.print(i + " ");
+            }
+        }
+        scanner.close();
+    }
+    
+    public static boolean ehPrimo(int num) {
+        if (num < 2) return false;
+        for (int i = 2; i <= Math.sqrt(num); i++) {
+            if (num % i == 0) return false;
+        }
+        return true;
+    }
+}
