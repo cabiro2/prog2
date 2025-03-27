@@ -1,0 +1,183 @@
+// Exercicio 1: Controle de Conta Bancária
+package dominio;
+
+public class ContaBancaria {
+    private String titular;
+    private double saldo;
+
+    public ContaBancaria(String titular, double saldoInicial) {
+        this.titular = titular;
+        this.saldo = saldoInicial;
+    }
+
+    public void depositar(double valor) {
+        saldo += valor;
+    }
+
+    public boolean sacar(double valor) {
+        if (valor <= saldo) {
+            saldo -= valor;
+            return true;
+        }
+        return false;
+    }
+
+    public void exibirSaldo() {
+        System.out.println("Saldo atual: R$ " + saldo);
+    }
+}
+
+// Exercicio 2: Cálculo de Salário com Bônus
+public class Funcionario {
+    private String nome;
+    private double salarioBase;
+    private String categoria;
+
+    public Funcionario(String nome, double salarioBase, String categoria) {
+        this.nome = nome;
+        this.salarioBase = salarioBase;
+        this.categoria = categoria;
+    }
+
+    public double calcularSalarioFinal() {
+        switch (categoria) {
+            case "A": return salarioBase * 1.2;
+            case "B": return salarioBase * 1.1;
+            default: return salarioBase;
+        }
+    }
+}
+
+// Exercicio 3: Simulação de Um Elevador
+public class Elevador {
+    private int andarAtual;
+    private int totalAndares;
+
+    public Elevador(int totalAndares) {
+        this.andarAtual = 0;
+        this.totalAndares = totalAndares;
+    }
+
+    public void subir() {
+        if (andarAtual < totalAndares) andarAtual++;
+    }
+
+    public void descer() {
+        if (andarAtual > 0) andarAtual--;
+    }
+
+    public void exibirAndar() {
+        System.out.println("Andar atual: " + andarAtual);
+    }
+}
+
+// Exercicio 4: Validação de Nota de um Aluno
+public class Aluno {
+    private String nome;
+    private double nota;
+
+    public Aluno(String nome, double nota) {
+        this.nome = nome;
+        this.nota = nota;
+    }
+
+    public boolean validarNota() {
+        return nota >= 0 && nota <= 10;
+    }
+
+    public String classificarAluno() {
+        if (nota >= 7) return "Aprovado";
+        if (nota >= 5) return "Recuperação";
+        return "Reprovado";
+    }
+}
+
+// Exercicio 5: Simulação de Um Caixa Eletrônico
+public class CaixaEletronico {
+    private double saldo;
+
+    public CaixaEletronico(double saldoInicial) {
+        this.saldo = saldoInicial;
+    }
+
+    public boolean sacar(double valor) {
+        if (valor % 10 == 0 && valor <= saldo) {
+            saldo -= valor;
+            return true;
+        }
+        return false;
+    }
+
+    public void exibirSaldo() {
+        System.out.println("Saldo atual: R$ " + saldo);
+    }
+}
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Escolha um exercício (1-5):");
+        int escolha = scanner.nextInt();
+
+        switch (escolha) {
+            case 1:
+                ContaBancaria conta = new ContaBancaria("Usuário", 0);
+                int opcao;
+                do {
+                    System.out.println("1. Depositar | 2. Sacar | 3. Exibir Saldo | 4. Sair");
+                    opcao = scanner.nextInt();
+                    if (opcao == 1) conta.depositar(scanner.nextDouble());
+                    else if (opcao == 2) conta.sacar(scanner.nextDouble());
+                    else if (opcao == 3) conta.exibirSaldo();
+                } while (opcao != 4);
+                break;
+            case 2:
+                System.out.print("Nome: ");
+                String nome = scanner.next();
+                System.out.print("Salário Base: ");
+                double salario = scanner.nextDouble();
+                System.out.print("Categoria (A/B/C): ");
+                String categoria = scanner.next();
+                Funcionario func = new Funcionario(nome, salario, categoria);
+                System.out.println("Salário final: R$ " + func.calcularSalarioFinal());
+                break;
+            case 3:
+                Elevador elevador = new Elevador(10);
+                int acao;
+                do {
+                    System.out.println("1. Subir | 2. Descer | 3. Exibir Andar | 4. Sair");
+                    acao = scanner.nextInt();
+                    if (acao == 1) elevador.subir();
+                    else if (acao == 2) elevador.descer();
+                    else if (acao == 3) elevador.exibirAndar();
+                } while (acao != 4);
+                break;
+            case 4:
+                System.out.print("Nome: ");
+                String alunoNome = scanner.next();
+                System.out.print("Nota: ");
+                double nota = scanner.nextDouble();
+                Aluno aluno = new Aluno(alunoNome, nota);
+                if (aluno.validarNota())
+                    System.out.println("Classificação: " + aluno.classificarAluno());
+                else
+                    System.out.println("Nota inválida!");
+                break;
+            case 5:
+                CaixaEletronico caixa = new CaixaEletronico(500);
+                int escolhaCaixa;
+                do {
+                    System.out.println("1. Sacar | 2. Exibir Saldo | 3. Sair");
+                    escolhaCaixa = scanner.nextInt();
+                    if (escolhaCaixa == 1) {
+                        System.out.print("Valor: ");
+                        if (!caixa.sacar(scanner.nextDouble()))
+                            System.out.println("Saque inválido!");
+                    } else if (escolhaCaixa == 2) caixa.exibirSaldo();
+                } while (escolhaCaixa != 3);
+                break;
+        }
+    }
+}
