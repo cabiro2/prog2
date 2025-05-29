@@ -1,0 +1,89 @@
+//1//
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Digite o texto a ser salvo no arquivo 'texto.txt':");
+        String texto = scanner.nextLine();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("texto.txt"))) {
+            writer.write(texto);
+            System.out.println("Texto salvo no arquivo 'texto.txt'");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("texto.txt"))) {
+            String linha;
+            System.out.println("\nConteúdo do arquivo 'texto.txt':");
+            while ((linha = reader.readLine()) != null) {
+                System.out.println(linha);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+//2//
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Main {
+    public static void main(String[] args) {
+        int contadorPalavras = 0;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("dados.txt"))) {
+            String linha;
+            while ((linha = reader.readLine()) != null) {
+                String[] palavras = linha.split("\\s+");
+                contadorPalavras += palavras.length;
+            }
+            System.out.println("Total de palavras no arquivo 'dados.txt': " + contadorPalavras);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+//3//
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class Main extends Application {
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage stage) {
+        VBox vbox = new VBox(10);
+        TextField textField = new TextField();
+        Button button = new Button("Exibir Mensagem");
+        Label label = new Label();
+
+        button.setOnAction(e -> label.setText(textField.getText()));
+
+        vbox.getChildren().addAll(textField, button, label);
+
+        Scene scene = new Scene(vbox, 300, 200);
+        stage.setTitle("Simulador de Mensagens");
+        stage.setScene(scene);
+        stage.show();
+    }
+}
