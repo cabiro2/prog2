@@ -1,0 +1,165 @@
+//1//
+
+class Funcionario {
+    String nome;
+    double salarioBase;
+
+    public Funcionario(String nome, double salarioBase) {
+        this.nome = nome;
+        this.salarioBase = salarioBase;
+    }
+
+    public double calcularSalario() {
+        return salarioBase;
+    }
+}
+
+class Gerente extends Funcionario {
+    
+    public Gerente(String nome, double salarioBase) {
+        super(nome, salarioBase);
+    }
+
+    @Override
+    public double calcularSalario() {
+        return salarioBase * 1.20;
+    }
+}
+
+class Estagiario extends Funcionario {
+    
+    public Estagiario(String nome, double salarioBase) {
+        super(nome, salarioBase);
+    }
+
+    @Override
+    public double calcularSalario() {
+        return salarioBase * 1.05;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Funcionario funcionario = new Funcionario("João", 2000);
+        Gerente gerente = new Gerente("Maria", 3000);
+        Estagiario estagiario = new Estagiario("Carlos", 1500);
+
+        System.out.println(funcionario.nome + " - Salário: R$ " + funcionario.calcularSalario());
+        System.out.println(gerente.nome + " - Salário: R$ " + gerente.calcularSalario());
+        System.out.println(estagiario.nome + " - Salário: R$ " + estagiario.calcularSalario());
+    }
+}
+
+
+//2//
+
+
+class Veiculo {
+    String marca;
+    String modelo;
+    int ano;
+
+    public Veiculo(String marca, String modelo, int ano) {
+        this.marca = marca;
+        this.modelo = modelo;
+        this.ano = ano;
+    }
+
+    public void exibirDados() {
+        System.out.println("Marca: " + marca + ", Modelo: " + modelo + ", Ano: " + ano);
+    }
+}
+
+class Carro extends Veiculo {
+    int quantidadePortas;
+
+    public Carro(String marca, String modelo, int ano, int quantidadePortas) {
+        super(marca, modelo, ano);
+        this.quantidadePortas = quantidadePortas;
+    }
+
+    @Override
+    public void exibirDados() {
+        super.exibirDados();
+        System.out.println("Quantidade de Portas: " + quantidadePortas);
+    }
+}
+
+class Moto extends Veiculo {
+    int cilindradas;
+
+    public Moto(String marca, String modelo, int ano, int cilindradas) {
+        super(marca, modelo, ano);
+        this.cilindradas = cilindradas;
+    }
+
+    @Override
+    public void exibirDados() {
+        super.exibirDados();
+        System.out.println("Cilindradas: " + cilindradas);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Carro carro = new Carro("Ford", "Fiesta", 2022, 4);
+        Moto moto = new Moto("Yamaha", "R1", 2023, 1000);
+
+        carro.exibirDados();
+        moto.exibirDados();
+    }
+}
+
+//3//
+
+class Animal {
+    String nome;
+    int idade;
+
+    public Animal(String nome, int idade) {
+        this.nome = nome;
+        this.idade = idade;
+    }
+
+    public void emitirSom() {
+        System.out.println("Som genérico de animal");
+    }
+}
+
+class Cachorro extends Animal {
+
+    public Cachorro(String nome, int idade) {
+        super(nome, idade);
+    }
+
+    @Override
+    public void emitirSom() {
+        System.out.println("Latindo...");
+    }
+}
+
+class Gato extends Animal {
+
+    public Gato(String nome, int idade) {
+        super(nome, idade);
+    }
+
+    @Override
+    public void emitirSom() {
+        System.out.println("Miando...");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Cachorro cachorro = new Cachorro("Rex", 5);
+        Gato gato = new Gato("Miau", 3);
+
+        System.out.println("Nome: " + cachorro.nome + ", Idade: " + cachorro.idade);
+        cachorro.emitirSom();
+
+        System.out.println("Nome: " + gato.nome + ", Idade: " + gato.idade);
+        gato.emitirSom();
+    }
+}
+
