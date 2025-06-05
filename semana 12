@@ -1,0 +1,146 @@
+// Questão 1
+
+interface Pagamento {
+    void realizarPagamento(double valor);
+}
+
+class CartaoCredito implements Pagamento {
+    public void realizarPagamento(double valor) {
+        System.out.println("Pagamento de R$" + valor + " realizado com Cartão de Crédito.");
+    }
+}
+
+class BoletoBancario implements Pagamento {
+    public void realizarPagamento(double valor) {
+        System.out.println("Pagamento de R$" + valor + " realizado com Boleto Bancário.");
+    }
+}
+
+class TestePagamento {
+    public static void main(String[] args) {
+        Pagamento cartao = new CartaoCredito();
+        Pagamento boleto = new BoletoBancario();
+
+        cartao.realizarPagamento(150.00);
+        boleto.realizarPagamento(200.00);
+    }
+}
+
+// Questão 2
+
+import java.util.Scanner;
+
+interface FormaGeometrica {
+    double calcularArea();
+    double calcularPerimetro();
+}
+
+class Retangulo implements FormaGeometrica {
+    double largura;
+    double altura;
+
+    Retangulo(double largura, double altura) {
+        this.largura = largura;
+        this.altura = altura;
+    }
+
+    public double calcularArea() {
+        return largura * altura;
+    }
+
+    public double calcularPerimetro() {
+        return 2 * (largura + altura);
+    }
+}
+
+class Circulo implements FormaGeometrica {
+    double raio;
+
+    Circulo(double raio) {
+        this.raio = raio;
+    }
+
+    public double calcularArea() {
+        return Math.PI * raio * raio;
+    }
+
+    public double calcularPerimetro() {
+        return 2 * Math.PI * raio;
+    }
+}
+
+class TesteFormaGeometrica {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Digite a largura do retângulo: ");
+        double largura = sc.nextDouble();
+        System.out.print("Digite a altura do retângulo: ");
+        double altura = sc.nextDouble();
+        Retangulo retangulo = new Retangulo(largura, altura);
+
+        System.out.print("Digite o raio do círculo: ");
+        double raio = sc.nextDouble();
+        Circulo circulo = new Circulo(raio);
+
+        System.out.println("Retângulo - Área: " + retangulo.calcularArea() + ", Perímetro: " + retangulo.calcularPerimetro());
+        System.out.println("Círculo - Área: " + circulo.calcularArea() + ", Perímetro: " + circulo.calcularPerimetro());
+
+        sc.close();
+    }
+}
+
+// Questão 3
+
+import java.util.Scanner;
+
+interface DispositivoEletronico {
+    void ligar();
+    void desligar();
+}
+
+class Smartphone implements DispositivoEletronico {
+    public void ligar() {
+        System.out.println("Smartphone ligado.");
+    }
+
+    public void desligar() {
+        System.out.println("Smartphone desligado.");
+    }
+}
+
+class Televisao implements DispositivoEletronico {
+    public void ligar() {
+        System.out.println("TV ligada.");
+    }
+
+    public void desligar() {
+        System.out.println("TV desligada.");
+    }
+}
+
+class TesteDispositivo {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        DispositivoEletronico smartphone = new Smartphone();
+        DispositivoEletronico televisao = new Televisao();
+
+        System.out.println("Escolha o dispositivo (1 - Smartphone, 2 - TV): ");
+        int escolha = sc.nextInt();
+
+        System.out.println("Deseja (1 - Ligar, 2 - Desligar): ");
+        int acao = sc.nextInt();
+
+        if (escolha == 1) {
+            if (acao == 1) smartphone.ligar();
+            else smartphone.desligar();
+        } else if (escolha == 2) {
+            if (acao == 1) televisao.ligar();
+            else televisao.desligar();
+        } else {
+            System.out.println("Opção inválida.");
+        }
+
+        sc.close();
+    }
+}
