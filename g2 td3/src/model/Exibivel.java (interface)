@@ -1,4 +1,4 @@
-// ===== model/Exibivel.java =====
+
 package model;
 
 public interface Exibivel {
