@@ -1,0 +1,133 @@
+Exibivel.java
+
+// public interface Exibivel {
+//     void exibirDados();
+// }
+
+
+
+Veiculo.java
+
+// public abstract class Veiculo implements Exibivel {
+//     private String placa;
+//     private String modelo;
+//     private int ano;
+
+//     public Veiculo(String placa, String modelo, int ano) {
+//         this.placa = placa;
+//         this.modelo = modelo;
+//         this.ano = ano;
+//     }
+
+//     public String getPlaca() { return placa; }
+//     public void setPlaca(String placa) { this.placa = placa; }
+
+//     public String getModelo() { return modelo; }
+//     public void setModelo(String modelo) { this.modelo = modelo; }
+
+//     public int getAno() { return ano; }
+//     public void setAno(int ano) { this.ano = ano; }
+// }
+
+
+Moto.java
+// public class Moto extends Veiculo {
+//     private int cilindrada;
+
+//     public Moto(String placa, String modelo, int ano, int cilindrada) {
+//         super(placa, modelo, ano);
+//         this.cilindrada = cilindrada;
+//     }
+
+//     public int getCilindrada() { return cilindrada; }
+//     public void setCilindrada(int cilindrada) { this.cilindrada = cilindrada; }
+
+//     @Override
+//     public void exibirDados() {
+//         System.out.println("Moto - Modelo: " + getModelo() + " | Placa: " + getPlaca() +
+//                            " | Ano: " + getAno() + " | Cilindrada: " + cilindrada + "cc");
+//     }
+// }
+
+
+Caminhao.java
+// public class Caminhao extends Veiculo {
+//     private double capacidadeCarga;
+
+//     public Caminhao(String placa, String modelo, int ano, double capacidadeCarga) {
+//         super(placa, modelo, ano);
+//         this.capacidadeCarga = capacidadeCarga;
+//     }
+
+//     public double getCapacidadeCarga() { return capacidadeCarga; }
+//     public void setCapacidadeCarga(double capacidadeCarga) { this.capacidadeCarga = capacidadeCarga; }
+
+//     @Override
+//     public void exibirDados() {
+//         System.out.println("Caminhão - Modelo: " + getModelo() + " | Placa: " + getPlaca() +
+//                            " | Ano: " + getAno() + " | Carga: " + capacidadeCarga + " toneladas");
+//     }
+// }
+
+Main.java
+// import java.util.ArrayList;
+// import java.util.Scanner;
+
+// public class Main {
+//     public static void main(String[] args) {
+//         ArrayList<Veiculo> veiculos = new ArrayList<>();
+//         Scanner scanner = new Scanner(System.in);
+//         int opcao;
+
+//         do {
+//             System.out.println("\n1 - Cadastrar novo veículo");
+//             System.out.println("2 - Listar veículos");
+//             System.out.println("3 - Sair");
+//             System.out.print(">> ");
+//             opcao = Integer.parseInt(scanner.nextLine());
+
+//             switch (opcao) {
+//                 case 1 -> {
+//                     System.out.print("Tipo (1-Carro, 2-Moto, 3-Caminhão): ");
+//                     int tipo = Integer.parseInt(scanner.nextLine());
+
+//                     System.out.print("Modelo: ");
+//                     String modelo = scanner.nextLine();
+//                     System.out.print("Placa: ");
+//                     String placa = scanner.nextLine();
+//                     System.out.print("Ano: ");
+//                     int ano = Integer.parseInt(scanner.nextLine());
+
+//                     switch (tipo) {
+//                         case 1 -> {
+//                             System.out.print("Quantidade de portas: ");
+//                             int portas = Integer.parseInt(scanner.nextLine());
+//                             veiculos.add(new Carro(placa, modelo, ano, portas));
+//                         }
+//                         case 2 -> {
+//                             System.out.print("Cilindrada: ");
+//                             int cilindrada = Integer.parseInt(scanner.nextLine());
+//                             veiculos.add(new Moto(placa, modelo, ano, cilindrada));
+//                         }
+//                         case 3 -> {
+//                             System.out.print("Capacidade de carga (toneladas): ");
+//                             double carga = Double.parseDouble(scanner.nextLine());
+//                             veiculos.add(new Caminhao(placa, modelo, ano, carga));
+//                         }
+//                         default -> System.out.println("Tipo inválido.");
+//                     }
+//                 }
+//                 case 2 -> {
+//                     for (Veiculo v : veiculos) {
+//                         v.exibirDados();
+//                     }
+//                 }
+//                 case 3 -> System.out.println("Encerrando...");
+//                 default -> System.out.println("Opção inválida.");
+//             }
+//         } while (opcao != 3);
+
+//         scanner.close();
+//     }
+// }
+
